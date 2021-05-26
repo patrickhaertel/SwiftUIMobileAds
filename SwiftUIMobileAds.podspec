@@ -28,7 +28,7 @@ Pod::Spec.new do |spec|
   Use SwiftUIMobileAds to integrate Admob/Google Mobile Ads into your SwiftUI app. SwiftUIMobileAds creates a simple view for Banner Ads that can easily be added to a ZStack. For Interstitial and Rewarded Ads, SwiftUIMobileAds provides two new view modifiers similar to .sheet() that allow you to easily ad these full screen ads to your app.
   DESC
 
-  spec.homepage     = "https://github.com/pnut39/SwiftUIMobileAds"
+  spec.homepage     = "https://github.com/patrickhaertel/SwiftUIMobileAds"
   # spec.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -80,7 +80,7 @@ spec.license      = { :type => "MIT", :file => "LICENSE" }
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  spec.source       = { :git => "https://github.com/pnut39/SwiftUIMobileAds.git", :tag => "#{spec.version}" }
+  spec.source       = { :git => "https://github.com/patrickhaertel/SwiftUIMobileAds.git", :tag => "#{spec.version}" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
