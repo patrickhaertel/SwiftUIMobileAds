@@ -27,7 +27,7 @@ class InterstitialAd: NSObject {
     }
 }
 
-final class InterstitialAdView: NSObject, UIViewControllerRepresentable, GADFullScreenContentDelegate {
+struct InterstitialAdView: UIViewControllerRepresentable {
     
     let interstitialAd = InterstitialAd.shared.interstitialAd
     @Binding var isPresented: Bool
@@ -36,9 +36,6 @@ final class InterstitialAdView: NSObject, UIViewControllerRepresentable, GADFull
     init(isPresented: Binding<Bool>, adUnitId: String) {
         self._isPresented = isPresented
         self.adUnitId = adUnitId
-        super.init()
-        
-        interstitialAd?.fullScreenContentDelegate = self
     }
     
     func makeUIViewController(context: Context) -> UIViewController {
@@ -55,6 +52,10 @@ final class InterstitialAdView: NSObject, UIViewControllerRepresentable, GADFull
         
     }
     
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
     func showAd(from root: UIViewController) {
         
         if let ad = interstitialAd {
@@ -65,9 +66,19 @@ final class InterstitialAdView: NSObject, UIViewControllerRepresentable, GADFull
         }
     }
     
-    func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-        InterstitialAd.shared.loadAd(withAdUnitId: adUnitId)
+    class Coordinator: NSObject, GADFullScreenContentDelegate {
+        var parent: InterstitialAdView
         
-        isPresented.toggle()
+        init(_ parent: InterstitialAdView) {
+            self.parent = parent
+            super.init()
+            parent.interstitialAd?.fullScreenContentDelegate = self
+        }
+        
+        func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+            InterstitialAd.shared.loadAd(withAdUnitId: parent.adUnitId)
+            
+            parent.isPresented.toggle()
+        }
     }
 }
