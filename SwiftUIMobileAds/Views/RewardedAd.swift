@@ -27,7 +27,7 @@ class RewardedAd: NSObject {
     }
 }
 
-final class RewardedAdView: NSObject, UIViewControllerRepresentable, GADFullScreenContentDelegate {
+struct RewardedAdView: UIViewControllerRepresentable {
     
     let rewardedAd = RewardedAd.shared.rewardedAd
     @Binding var isPresented: Bool
@@ -38,10 +38,6 @@ final class RewardedAdView: NSObject, UIViewControllerRepresentable, GADFullScre
         self._isPresented = isPresented
         self.adUnitId = adUnitId
         self.rewardFunc = rewardFunc
-        
-        super.init()
-        
-        rewardedAd?.fullScreenContentDelegate = self
     }
     
     func makeUIViewController(context: Context) -> UIViewController {
@@ -58,6 +54,10 @@ final class RewardedAdView: NSObject, UIViewControllerRepresentable, GADFullScre
         
     }
     
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
+    }
+    
     func showAd(from root: UIViewController) {
         
         if let ad = rewardedAd {
@@ -70,9 +70,19 @@ final class RewardedAdView: NSObject, UIViewControllerRepresentable, GADFullScre
         }
     }
     
-    func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-        RewardedAd.shared.loadAd(withAdUnitId: adUnitId)
+    class Coordinator: NSObject, GADFullScreenContentDelegate {
+        let parent: RewardedAdView
         
-        isPresented.toggle()
+        init(parent: RewardedAdView) {
+            self.parent = parent
+            super.init()
+            parent.rewardedAd?.fullScreenContentDelegate = self
+        }
+        
+        func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+            RewardedAd.shared.loadAd(withAdUnitId: parent.adUnitId)
+            
+            parent.isPresented.toggle()
+        }
     }
 }

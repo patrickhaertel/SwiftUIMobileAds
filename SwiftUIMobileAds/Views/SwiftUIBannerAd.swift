@@ -104,7 +104,7 @@ class BannerAdVC: UIViewController {
     }
 }
 
-final class BannerAd: UIViewControllerRepresentable {
+struct BannerAd: UIViewControllerRepresentable {
     let adUnitId: String
     
     init(adUnitId: String) {
